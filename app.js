@@ -31,11 +31,14 @@ function visitList(ast, vFile) {
     var tab = []
 
     Array.from(node.children).forEach( ( nodeC ) => {
-        if( nodeC.children[0].type == 'paragraph' ) {
-          if( "~!=".indexOf(nodeC.children[0].children[0].value[0]) < 0) {
+        if( nodeC.children && nodeC.children[0].type == 'paragraph' ) {
+          if( nodeC.children[0].children && nodeC.children[0].children[0].value ) {
+              if( "~!=".indexOf(nodeC.children[0].children[0].value[0]) < 0)
+                isQcm = false;
+          } else
             isQcm = false;
-          }
-        }
+        } else
+          isQcm = false;
     });
     if( isQcm ) {
       Array.from(node.children).forEach( ( nodeC ) => {
