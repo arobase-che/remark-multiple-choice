@@ -1,9 +1,9 @@
 const visit = require('unist-util-visit');
 
 
-const PLUGIN_NAME = 'remark-qcm';
+const PLUGIN_NAME = 'remark-multiple-choise';
 
-var nb_qcm = 0;
+var nb_mc = 0;
 
 function dealLabelChildren( listChild ) {
   var t = []
@@ -26,7 +26,7 @@ function dealLabelChildren( listChild ) {
 function visitList(ast, vFile) {
   return visit(ast, 'list', (node, index, parent) => {
     const { position } = node;
-    var isQcm = true;
+    var isMultipleChoise = true;
     var nbQ = 0;
     var tab = []
 
@@ -34,13 +34,13 @@ function visitList(ast, vFile) {
         if( nodeC.children && nodeC.children[0].type == 'paragraph' ) {
           if( nodeC.children[0].children && nodeC.children[0].children[0].value ) {
               if( "~!=".indexOf(nodeC.children[0].children[0].value[0]) < 0)
-                isQcm = false;
+                isMultipleChoise = false;
           } else
-            isQcm = false;
+            isMultipleChoise = false;
         } else
-          isQcm = false;
+          isMultipleChoise = false;
     });
-    if( isQcm ) {
+    if( isMultipleChoise ) {
       Array.from(node.children).forEach( ( nodeC ) => {
         if( nodeC.children[0].type == 'paragraph' ) {
           if( nodeC.children[0].children[0].value[0] == '~' ) {
@@ -53,16 +53,16 @@ function visitList(ast, vFile) {
           nodeC.children[0].children[0].value = nodeC.children[0].children[0].value.slice(1) + '\r';
         }
       })
-      node.type = 'qcm'
+      node.type = 'mc'
       node.data = {
           hName: 'fieldset',
           hProperties: {
-            className: 'qcm check',
-            id: 'qcm_' + nb_qcm
+            className: 'mc check',
+            id: 'mc_' + nb_mc
           }
       }
       node.children = [{
-        type:'list-item-qcm',
+        type:'list-item-mc',
         data: {
           hName: 'ul',
           hProperties:{
@@ -83,7 +83,7 @@ function visitList(ast, vFile) {
             hProperties: {
               checked: x.checked,
               type:'checkbox',
-              id: 'qcm_'+nb_qcm+'_'+nbQ,
+              id: 'mc_'+nb_mc+'_'+nbQ,
               className: tab[nbQ] == 0 ? '!' : (tab[nbQ] == 1 ? '=' : '~'),
             }
           }},
@@ -92,7 +92,7 @@ function visitList(ast, vFile) {
             data: {
               hName: 'label',
               hProperties: {
-                for: 'qcm_'+nb_qcm+'_'+(nbQ++)
+                for: 'mc_'+nb_mc+'_'+(nbQ++)
               }
             },
             children: dealLabelChildren(x.children)
@@ -102,7 +102,7 @@ function visitList(ast, vFile) {
         data: {
           hName: 'input',
           hProperties:{
-            'onclick': 'check(\'qcm_'+nb_qcm+'\',[' + String(tab) + '])',
+            'onclick': 'check(\'mc_'+nb_mc+'\',[' + String(tab) + '])',
             value: 'Validate',
             type:'button'
           }
@@ -111,7 +111,7 @@ function visitList(ast, vFile) {
       }
       ]
         
-      nb_qcm++;
+      nb_mc++;
     }
     return node;
   });
@@ -125,7 +125,7 @@ function visitList(ast, vFile) {
  * @link https://github.com/vfile/vfile
  * @return {function}
  */
-function qcm() {
+function multipleChoise() {
   /**
    * @param {object} ast MDAST
    * @param {vFile} vFile
@@ -143,4 +143,4 @@ function qcm() {
   };
 }
 
-module.exports = qcm;
+module.exports = multipleChoise;
