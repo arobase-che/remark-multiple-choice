@@ -12,8 +12,8 @@ function dealLabelChildren(listChild) {
     listChild[listChild.length - 1].data = {
       hName: 'blockquote',
       hProperties: {
-        className: 'hiden_block_quote'
-      }
+        className: 'hiden_block_quote',
+      },
     };
   }
   t = t.concat(listChild.slice(1));
@@ -49,7 +49,7 @@ function visitList(ast) {
           } else {
             tab.push(1);
           }
-          nodeC.children[0].children[0].value = nodeC.children[0].children[0].value.slice(1) + '\r';
+          nodeC.children[0].children[0].value = `${nodeC.children[0].children[0].value.slice(1)}\r`;
         }
       });
       node.type = 'mc';
@@ -57,23 +57,23 @@ function visitList(ast) {
         hName: 'fieldset',
         hProperties: {
           className: 'mc check',
-          id: 'mc_' + nbMC
-        }
+          id: `mc_${nbMC}`,
+        },
       };
       node.children = [{
         type: 'list-item-mc',
         data: {
           hName: 'ul',
           hProperties: {
-            style: 'list-style-type: none'
-          }
+            style: 'list-style-type: none',
+          },
         },
         children: node.children.map(x => ({type: 'input-list-item',
           data: {
             hName: 'li',
             hProperties: {
-              style: 'list-style-type: none'
-            }
+              style: 'list-style-type: none',
+            },
           },
           children: [
             {type: 'input-list-input',
@@ -82,32 +82,32 @@ function visitList(ast) {
                 hProperties: {
                   checked: x.checked,
                   type: 'checkbox',
-                  id: 'mc_' + nbMC + '_' + nbQ,
-                  className: tab[nbQ] === 0 ? '!' : (tab[nbQ] === 1 ? '=' : '~')
-                }
+                  id: `mc_${nbMC}_${nbQ}`,
+                  className: '!=~'[tab[nbQ]],
+                },
               }},
             {
               type: 'input-list-label',
               data: {
                 hName: 'label',
                 hProperties: {
-                  for: 'mc_' + nbMC + '_' + (nbQ++)
-                }
+                  for: `mc_${nbMC}_${nbQ++}`,
+                },
               },
-              children: dealLabelChildren(x.children)
-            }]
-        }))
+              children: dealLabelChildren(x.children),
+            }],
+        })),
       }, {type: 'field-button',
         data: {
           hName: 'input',
           hProperties: {
-            onclick: 'check(\'mc_' + nbMC + '\',[' + String(tab) + '])',
+            onclick: `check('mc_${nbMC}',[${String(tab)}])`,
             value: 'Validate',
-            type: 'button'
-          }
-        }
+            type: 'button',
+          },
+        },
 
-      }
+      },
       ];
 
       nbMC++;
