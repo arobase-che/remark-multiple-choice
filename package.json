@@ -1,9 +1,11 @@
 {
   "name": "remark-multiple-choice",
   "version": "0.1.0",
-  "description": "A remark plugin for Markdown that parse list of answers to multiple choise",
+  "description": "A remark plugin for Markdown that parse list of answers to multiple choice",
   "main": "app.js",
   "scripts": {
+    "pretest": "xo",
+    "test": "ava",
     "start": "node app.js"
   },
   "dependencies": {
@@ -14,16 +16,22 @@
   "author": "ache",
   "license": "MIT",
   "keywords": [
-    "mermaid",
-    "graphs",
+    "multiple choice",
+    "test",
+    "answer",
     "remark"
   ],
   "devDependencies": {
+    "ava": "^0.25.0",
+    "rehype-raw": "^2.0.0",
+    "rehype-stringify": "^3.0.0",
+    "remark-parse": "^5.0.0",
+    "remark-rehype": "^3.0.0",
+    "unified": "^6.1.6",
     "xo": "^0.18.2"
-  }
-  ,
-  "xo" : {
-    "space" : true,
+  },
+  "xo": {
+    "space": true,
     "rules": {
       "comma-dangle": [
         "error",
