@@ -10,6 +10,6 @@ And this is an other QCM :
 
  - [ ] ! The answer D
  - [x] = That doesn't work *at the moment*
- - [x] ! It's still work !
+ - [ ] ! It's still work !
  - [x] ~ It will work
 
