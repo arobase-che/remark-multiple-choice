@@ -1,12 +1,11 @@
 const visit = require('unist-util-visit');
 
-let nbMC = 0;
-
 function dealLabelChildren(listChild) {
   let t = [];
   if (listChild[0].type === 'paragraph') {
     t = listChild[0].children;
   }
+  t[0].value = t[0].value.trim();
   if (listChild[listChild.length - 1].type === 'blockquote') {
     listChild[listChild.length - 1].type = 'div';
     listChild[listChild.length - 1].data = {
@@ -21,6 +20,7 @@ function dealLabelChildren(listChild) {
 }
 
 function visitList(ast) {
+  let nbMC = 0;
   return visit(ast, 'list', node => {
     let isMultipleChoise = true;
     let nbQ = 0;
@@ -64,16 +64,10 @@ function visitList(ast) {
         type: 'list-item-mc',
         data: {
           hName: 'ul',
-          hProperties: {
-            style: 'list-style-type: none',
-          },
         },
         children: node.children.map(x => ({type: 'input-list-item',
           data: {
             hName: 'li',
-            hProperties: {
-              style: 'list-style-type: none',
-            },
           },
           children: [
             {type: 'input-list-input',
@@ -83,7 +77,7 @@ function visitList(ast) {
                   checked: x.checked,
                   type: 'checkbox',
                   id: `mc_${nbMC}_${nbQ}`,
-                  className: '!=~'[tab[nbQ]],
+                  className: '!~='[tab[nbQ] * 2],
                 },
               }},
             {
@@ -97,7 +91,9 @@ function visitList(ast) {
               children: dealLabelChildren(x.children),
             }],
         })),
-      }, {type: 'field-button',
+      },
+      {
+        type: 'field-button',
         data: {
           hName: 'input',
           hProperties: {
@@ -106,7 +102,6 @@ function visitList(ast) {
             type: 'button',
           },
         },
-
       },
       ];
 
