@@ -30,24 +30,90 @@ test('simple', t => {
  - [x] ! False
  - [ ] ~ None
  - [x] = True`);
-  t.is(contents, '');
+  t.is(contents,
+`<fieldset class="mc check" id="mc_0"><ul>\
+<li><input checked type="checkbox" id="mc_0_0" class="!"><label for="mc_0_0">False</label></li>\
+<li><input type="checkbox" id="mc_0_1" class="~"><label for="mc_0_1">None</label></li>\
+<li><input checked type="checkbox" id="mc_0_2" class="="><label for="mc_0_2">True</label></li>\
+</ul><input onclick="check(&#x27;mc_0&#x27;,[0,0.5,1])" value="Validate" type="button"></fieldset>`);
 });
 
-test('mchoide', t => {
+test('mchoide-snap', t => {
   const {contents} = render(file(join(__dirname, 'mchoice.md')));
   t.snapshot(contents);
 });
 
-test('mchoide-raw', t => {
+test('all-checked', t => {
+  const {contents} = render(`
+ - [x] ! False
+ - [x] ~ None
+ - [x] = True`);
+  t.is(contents,
+`<fieldset class="mc check" id="mc_0"><ul>\
+<li><input checked type="checkbox" id="mc_0_0" class="!"><label for="mc_0_0">False</label></li>\
+<li><input checked type="checkbox" id="mc_0_1" class="~"><label for="mc_0_1">None</label></li>\
+<li><input checked type="checkbox" id="mc_0_2" class="="><label for="mc_0_2">True</label></li>\
+</ul><input onclick="check(&#x27;mc_0&#x27;,[0,0.5,1])" value="Validate" type="button"></fieldset>`);
+});
+
+test('none-checked', t => {
+  const {contents} = render(`
+ - [ ] ! False
+ - [ ] ~ None
+ - [ ] = True`);
+  t.is(contents,
+`<fieldset class="mc check" id="mc_0"><ul>\
+<li><input type="checkbox" id="mc_0_0" class="!"><label for="mc_0_0">False</label></li>\
+<li><input type="checkbox" id="mc_0_1" class="~"><label for="mc_0_1">None</label></li>\
+<li><input type="checkbox" id="mc_0_2" class="="><label for="mc_0_2">True</label></li>\
+</ul><input onclick="check(&#x27;mc_0&#x27;,[0,0.5,1])" value="Validate" type="button"></fieldset>`);
+});
+
+test('caps-checked', t => {
+  const {contents} = render(`
+ - [X] ! False
+ - [X] ~ None
+ - [X] = True`);
+  t.is(contents,
+`<fieldset class="mc check" id="mc_0"><ul>\
+<li><input checked type="checkbox" id="mc_0_0" class="!"><label for="mc_0_0">False</label></li>\
+<li><input checked type="checkbox" id="mc_0_1" class="~"><label for="mc_0_1">None</label></li>\
+<li><input checked type="checkbox" id="mc_0_2" class="="><label for="mc_0_2">True</label></li>\
+</ul><input onclick="check(&#x27;mc_0&#x27;,[0,0.5,1])" value="Validate" type="button"></fieldset>`);
+});
+
+test('empty-square-check', t => {
+  const {contents} = render(`
+ - [] ! False
+ - [] ~ None
+ - [] = True`);
+  t.is(contents,
+`<fieldset class="mc check" id="mc_0"><ul>\
+<li><input type="checkbox" id="mc_0_0" class="!"><label for="mc_0_0">False</label></li>\
+<li><input type="checkbox" id="mc_0_1" class="~"><label for="mc_0_1">None</label></li>\
+<li><input type="checkbox" id="mc_0_2" class="="><label for="mc_0_2">True</label></li>\
+</ul><input onclick="check(&#x27;mc_0&#x27;,[0,0.5,1])" value="Validate" type="button"></fieldset>`);
+});
+
+test('multi-check', t => {
+  const {contents} = render(`
+ - [X] = caps
+ - [] ! empty
+ - [ ] ! space
+ - [x] = checkmark`);
+  t.is(contents,
+`<fieldset class="mc check" id="mc_0"><ul>\
+<li><input checked type="checkbox" id="mc_0_0" class="="><label for="mc_0_0">caps</label></li>\
+<li><input type="checkbox" id="mc_0_1" class="!"><label for="mc_0_1">empty</label></li>\
+<li><input type="checkbox" id="mc_0_2" class="!"><label for="mc_0_2">space</label></li>\
+<li><input checked type="checkbox" id="mc_0_3" class="="><label for="mc_0_3">checkmark</label></li>\
+</ul><input onclick="check(&#x27;mc_0&#x27;,[1,0,0,1])" value="Validate" type="button"></fieldset>`);
+});
+
+test('mchoide-raw-snap', t => {
   const {contents} = renderRaw(file(join(__dirname, 'mchoice-raw.md')));
   t.snapshot(contents);
 });
-
-test.todo('all checked');
-test.todo('none checked');
-test.todo('caps checked');
-test.todo('enpty square brackets');
-test.todo('every kind of checked');
 
 test.todo('Citation in a multiple-choice');
 test.todo('Feedback feature test');
